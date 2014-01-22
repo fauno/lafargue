@@ -8,6 +8,7 @@
 # la Pereza.  http://es.wikipedia.org/wiki/Paul_Lafargue
 require 'cinch'
 require './lib/ipb'
+require './lib/invite'
 
 # Ideas:
 # Especificar distintas redes IRC y canales a los que el Bot se conecta.
