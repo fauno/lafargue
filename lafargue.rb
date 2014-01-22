@@ -7,7 +7,6 @@
 # Laura) acabó siendo determinante. Su obra más conocida es El Derecho a
 # la Pereza.  http://es.wikipedia.org/wiki/Paul_Lafargue
 require 'cinch'
-require 'zmqmachine'
 
 # Ideas:
 # Especificar distintas redes IRC y canales a los que el Bot se conecta.
@@ -20,3 +19,44 @@ require 'zmqmachine'
 # sería levantar un socket y que todas las instancias escriban y lean de
 # ahí.
 
+NICK = "lafargue"
+
+# Array de redes e instancias del bot
+networks = [
+  { server: 'irc.freenode.net',
+    bot: nil,
+    port: 6697,
+    ssl: true,
+    channels: [ "#ppar" ] },
+  { server: 'irc.hackcoop.com.ar',
+    bot: nil,
+    port: 6697,
+    ssl: true,
+    channels: [ "#piratas" ] },
+  { server: 'tallinn-ee.pirateirc.net',
+    bot: nil,
+    port: 6697,
+    ssl: true,
+    channels: [ "#ppar" ] }
+]
+
+instances = []
+
+# Por cada red generar una instancia del bot
+networks.each do |n|
+  n[:bot] = Cinch::Bot.new do
+    configure do |c|
+      c.nick = NICK
+      c.server = n[:server]
+      c.port = n[:port]
+      c.channels = n[:channels]
+      c.ssl.use = n[:ssl] if not n[:ssl].nil?
+    end
+  end
+
+  # Correr cada instancia en un thread nuevo
+  instances << Thread.new { n[:bot].start }
+end
+
+# Esperar que terminen!
+instances.each { |i| i.join }
