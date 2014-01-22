@@ -7,6 +7,7 @@
 # Laura) acabó siendo determinante. Su obra más conocida es El Derecho a
 # la Pereza.  http://es.wikipedia.org/wiki/Paul_Lafargue
 require 'cinch'
+require './lib/ipb'
 
 # Ideas:
 # Especificar distintas redes IRC y canales a los que el Bot se conecta.
@@ -22,7 +23,7 @@ require 'cinch'
 NICK = "lafargue"
 
 # Array de redes e instancias del bot
-networks = [
+$networks = [
   { server: 'irc.freenode.net',
     bot: nil,
     port: 6697,
@@ -43,7 +44,7 @@ networks = [
 instances = []
 
 # Por cada red generar una instancia del bot
-networks.each do |n|
+$networks.each do |n|
   n[:bot] = Cinch::Bot.new do
     configure do |c|
       c.nick = NICK
@@ -51,6 +52,7 @@ networks.each do |n|
       c.port = n[:port]
       c.channels = n[:channels]
       c.ssl.use = n[:ssl] if not n[:ssl].nil?
+      c.plugins.plugins = [ IPB ]
     end
   end
 
