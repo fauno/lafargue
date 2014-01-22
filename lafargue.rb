@@ -9,3 +9,14 @@
 require 'cinch'
 require 'zmqmachine'
 
+# Ideas:
+# Especificar distintas redes IRC y canales a los que el Bot se conecta.
+# Cuando alguien habla en uno de los canales, el Bot repite lo que se
+# dice en los demás, manteniéndolos conectados.
+#
+# Como Cinch no soporta varias redes, la solución sería levantar varias
+# instancias del mismo Bot en distintas redes y establecer IPC entre
+# ellos para que repitan.  Como tengo ganas de probar ZeroMQ, la idea
+# sería levantar un socket y que todas las instancias escriban y lean de
+# ahí.
+
