@@ -5,9 +5,9 @@ class IPB
   include Cinch::Plugin
 
   # Escuchar mensajes privados y en canales
-  listen_to :message
+  listen_to :message, method: :message
   # Escuchar acciones /me
-  listen_to :action
+  listen_to :action, method: :action
 
   # Cuando llega un mensaje a un canal
   def message(m)
