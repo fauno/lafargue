@@ -13,12 +13,14 @@ class IPB
   def message(m)
 
     return if m.action?
+    # Los mensajes que empiezan con & son locales
+    return if m.message.match(/^\&/)
 
     # Si estamos preguntando por los canales devolver una lista y dejar
     # de procesar
     if not m.message.match(/\/list/).nil?
       $networks.each do |n|
-        m.reply "#{n[:server]} => #{n[:bot].channels.map { |c| c.name }.to_s.gsub(/["\[\]]/, '') }"
+        m.reply "&#{n[:server]} => #{n[:bot].channels.map { |c| c.name }.to_s.gsub(/["\[\]]/, '') }"
       end
 
       return
@@ -28,8 +30,10 @@ class IPB
     if not m.message.match(/\/names/).nil?
       $networks.each do |n|
         n[:bot].channels.each do |c|
-          puts c.users
-          m.reply "#{n[:server]}/#{c.name} (#{c.users.count}): #{c.users.keys.map { |u| u.nick }.to_s.gsub(/["\[\]]/, '')}"
+          # En lugar de pinguear a todo el mundo, saltearse el canal
+          # actual
+          next if c.name == m.channel.name and n[:server] == m.bot.config.server
+          m.reply "&#{n[:server]}/#{c.name} (#{c.users.count}): #{c.users.keys.map { |u| u.nick }.to_s.gsub(/["\[\]]/, '')}"
         end
       end
       return
