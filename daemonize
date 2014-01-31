@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+mkdir -p tmp
+pushd $(dirname "$(realpath "$0")")
+
+test -f tmp/lafargue.pid && pkill --pidfile tmp/lafargue.pid || true
+
+bundle exec ruby lafargue.rb &
+echo $! >tmp/lafargue.pid
